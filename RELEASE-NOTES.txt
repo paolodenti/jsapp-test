@@ -1,0 +1,24 @@
+                               JSapp  Test
+                               Version 1.0
+                              Release Notes
+
+
+INTRODUCTION:
+
+Test application for JSapp Core library
+JSapp 1.0 at least requires Java 7.0.
+
+COMPATIBILITY
+=============
+
+NEW FEATURES
+==============
+
+
+FIXED BUGS
+============
+
+
+CHANGES
+=========
+
