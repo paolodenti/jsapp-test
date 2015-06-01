@@ -17,31 +17,31 @@
  * limitations under the License.
  */
 
-package it.camit.jsapp.app;
+package com.github.paolodenti.jsapp.app;
 
-import it.camit.jsapp.core.command.Sapp70Command;
-import it.camit.jsapp.core.command.Sapp71Command;
-import it.camit.jsapp.core.command.Sapp72Command;
-import it.camit.jsapp.core.command.Sapp73Command;
-import it.camit.jsapp.core.command.Sapp74Command;
-import it.camit.jsapp.core.command.Sapp75Command;
-import it.camit.jsapp.core.command.Sapp76Command;
-import it.camit.jsapp.core.command.Sapp77Command;
-import it.camit.jsapp.core.command.Sapp78Command;
-import it.camit.jsapp.core.command.Sapp79Command;
-import it.camit.jsapp.core.command.Sapp7ACommand;
-import it.camit.jsapp.core.command.Sapp7BCommand;
-import it.camit.jsapp.core.command.Sapp7CCommand;
-import it.camit.jsapp.core.command.Sapp7DCommand;
-import it.camit.jsapp.core.command.Sapp7ECommand;
-import it.camit.jsapp.core.command.Sapp7FCommand;
-import it.camit.jsapp.core.command.Sapp80Command;
-import it.camit.jsapp.core.command.Sapp81Command;
-import it.camit.jsapp.core.command.Sapp82Command;
-import it.camit.jsapp.core.command.base.SappCommand;
-import it.camit.jsapp.core.command.base.SappConnection;
-import it.camit.jsapp.core.command.base.SappException;
-import it.camit.jsapp.core.util.SappUtils;
+import com.github.paolodenti.jsapp.core.command.Sapp70Command;
+import com.github.paolodenti.jsapp.core.command.Sapp71Command;
+import com.github.paolodenti.jsapp.core.command.Sapp72Command;
+import com.github.paolodenti.jsapp.core.command.Sapp73Command;
+import com.github.paolodenti.jsapp.core.command.Sapp74Command;
+import com.github.paolodenti.jsapp.core.command.Sapp75Command;
+import com.github.paolodenti.jsapp.core.command.Sapp76Command;
+import com.github.paolodenti.jsapp.core.command.Sapp77Command;
+import com.github.paolodenti.jsapp.core.command.Sapp78Command;
+import com.github.paolodenti.jsapp.core.command.Sapp79Command;
+import com.github.paolodenti.jsapp.core.command.Sapp7ACommand;
+import com.github.paolodenti.jsapp.core.command.Sapp7BCommand;
+import com.github.paolodenti.jsapp.core.command.Sapp7CCommand;
+import com.github.paolodenti.jsapp.core.command.Sapp7DCommand;
+import com.github.paolodenti.jsapp.core.command.Sapp7ECommand;
+import com.github.paolodenti.jsapp.core.command.Sapp7FCommand;
+import com.github.paolodenti.jsapp.core.command.Sapp80Command;
+import com.github.paolodenti.jsapp.core.command.Sapp81Command;
+import com.github.paolodenti.jsapp.core.command.Sapp82Command;
+import com.github.paolodenti.jsapp.core.command.base.SappCommand;
+import com.github.paolodenti.jsapp.core.command.base.SappConnection;
+import com.github.paolodenti.jsapp.core.command.base.SappException;
+import com.github.paolodenti.jsapp.core.util.SappUtils;
 
 import java.util.Scanner;
 
