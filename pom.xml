@@ -7,7 +7,7 @@
 	<version>1.0</version>
 	<packaging>jar</packaging>
 	<description>jsapp test project for jsapp-core library</description>
-	<name>jsapp-core</name>
+	<name>jsapp-test</name>
 
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
