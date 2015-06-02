@@ -21,5 +21,5 @@ JSapp Test is a basic test suite for [JSapp Core library](https://github.com/pao
 
 Build and run
 -------------------
-mvn clean compile assembly:single
-java -jar target/jsapp-test-<version number>-jar-with-dependencies.jar
+- mvn clean compile assembly:single
+- java -jar target/jsapp-test-<version number>-jar-with-dependencies.jar
