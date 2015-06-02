@@ -17,4 +17,4 @@
 JSapp Test
 ===================
 
-JSapp Test is a simple application created to test JSapp Core library
+JSapp Test is a basic test suite for [JSapp Core library](https://github.com/paolodenti/jsapp-core)
