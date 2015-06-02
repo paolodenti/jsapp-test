@@ -53,7 +53,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.github.paolodenti.jsapp.app.TestMenu</mainClass>
+							<mainClass>com.github.paolodenti.jsapp.test.TestMenu</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.github.paolodenti.jsapp.app;
+package com.github.paolodenti.jsapp.test;
 
 import com.github.paolodenti.jsapp.core.command.Sapp70Command;
 import com.github.paolodenti.jsapp.core.command.Sapp71Command;
@@ -175,6 +175,8 @@ public class TestMenu {
 				requireEnter();
 			} else if ("99".equals(choice)) {
 				break;
+			} else {
+				alertUser("bad choice");
 			}
 		}
 	}
