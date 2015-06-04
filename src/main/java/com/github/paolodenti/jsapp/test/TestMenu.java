@@ -201,6 +201,8 @@ public class TestMenu {
 				alertUser("Cannot open connection to device");
 				hostName = null;
 				portNumber = 0;
+
+				return Boolean.FALSE;
 			}
 		}
 
