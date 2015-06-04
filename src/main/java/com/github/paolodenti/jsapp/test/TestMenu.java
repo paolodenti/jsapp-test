@@ -19,6 +19,10 @@
 
 package com.github.paolodenti.jsapp.test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Scanner;
+
 import com.github.paolodenti.jsapp.core.command.Sapp70Command;
 import com.github.paolodenti.jsapp.core.command.Sapp71Command;
 import com.github.paolodenti.jsapp.core.command.Sapp72Command;
@@ -43,10 +47,10 @@ import com.github.paolodenti.jsapp.core.command.base.SappConnection;
 import com.github.paolodenti.jsapp.core.command.base.SappException;
 import com.github.paolodenti.jsapp.core.util.SappUtils;
 
-import java.util.Scanner;
-
 /**
- * <p>Program for Sapp commands testing.</p>
+ * <p>
+ * Program for Sapp commands testing.
+ * </p>
  *
  * @author Paolo Denti
  */
@@ -75,10 +79,11 @@ public class TestMenu {
 	private void presentMenu() {
 
 		if (hostName == null && portNumber == 0) {
-			getDeviceAddress();
+			execute1();
 		}
 
-		while (true) {
+		boolean exit = false;
+		while (!exit) {
 			System.out.println("=======================================================");
 			System.out.println("                    JSapp test menu");
 			System.out.println("=======================================================");
@@ -114,74 +119,59 @@ public class TestMenu {
 			System.out.print("Your choice: ");
 
 			String choice = input.nextLine();
-			if ("1".equals(choice)) {
-				getDeviceAddress();
-			} else if ("70".equalsIgnoreCase(choice)) {
-				execute70();
-				requireEnter();
-			} else if ("71".equalsIgnoreCase(choice)) {
-				execute71();
-				requireEnter();
-			} else if ("72".equalsIgnoreCase(choice)) {
-				execute72();
-				requireEnter();
-			} else if ("73".equalsIgnoreCase(choice)) {
-				execute73();
-				requireEnter();
-			} else if ("74".equalsIgnoreCase(choice)) {
-				execute74();
-				requireEnter();
-			} else if ("75".equalsIgnoreCase(choice)) {
-				execute75();
-				requireEnter();
-			} else if ("76".equalsIgnoreCase(choice)) {
-				execute76();
-				requireEnter();
-			} else if ("77".equalsIgnoreCase(choice)) {
-				execute77();
-				requireEnter();
-			} else if ("78".equalsIgnoreCase(choice)) {
-				execute78();
-				requireEnter();
-			} else if ("79".equalsIgnoreCase(choice)) {
-				execute79();
-				requireEnter();
-			} else if ("7A".equalsIgnoreCase(choice)) {
-				execute7A();
-				requireEnter();
-			} else if ("7B".equalsIgnoreCase(choice)) {
-				execute7B();
-				requireEnter();
-			} else if ("7C".equalsIgnoreCase(choice)) {
-				execute7C();
-				requireEnter();
-			} else if ("7D".equalsIgnoreCase(choice)) {
-				execute7D();
-				requireEnter();
-			} else if ("7E".equalsIgnoreCase(choice)) {
-				execute7E();
-				requireEnter();
-			} else if ("7F".equalsIgnoreCase(choice)) {
-				execute7F();
-				requireEnter();
-			} else if ("80".equalsIgnoreCase(choice)) {
-				execute80();
-				requireEnter();
-			} else if ("81".equalsIgnoreCase(choice)) {
-				execute81();
-				requireEnter();
-			} else if ("82".equalsIgnoreCase(choice)) {
-				execute82();
-				requireEnter();
-			} else if ("99".equals(choice)) {
-				break;
-			} else {
+			try {
+				int val = Integer.parseInt(choice, 16);
+
+				switch (val) {
+				case 1:
+				case 0x70:
+				case 0x71:
+				case 0x72:
+				case 0x73:
+				case 0x74:
+				case 0x75:
+				case 0x76:
+				case 0x77:
+				case 0x78:
+				case 0x79:
+				case 0x7A:
+				case 0x7B:
+				case 0x7C:
+				case 0x7D:
+				case 0x7E:
+				case 0x7F:
+				case 0x80:
+				case 0x81:
+				case 0x82: {
+					try {
+						Method m = this.getClass().getDeclaredMethod("execute" + choice.toUpperCase());
+						m.setAccessible(true);
+						Boolean success = (Boolean) m.invoke(this);
+
+						if (success.booleanValue()) {
+							alertUser("request completed with success");
+						}
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						alertUser("method invoke failed:" + e.getMessage());
+					}
+					break;
+				}
+
+				case 0x99:
+					exit = true;
+					break;
+
+				default:
+					alertUser("bad choice");
+					break;
+				}
+			} catch (NumberFormatException e) {
 				alertUser("bad choice");
 			}
 		}
 	}
 
-	private void getDeviceAddress() {
+	protected Boolean execute1() {
 
 		while (true) {
 			while (true) {
@@ -213,9 +203,11 @@ public class TestMenu {
 				portNumber = 0;
 			}
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute70() {
+	protected Boolean execute70() {
 
 		byte nalm;
 		try {
@@ -223,7 +215,7 @@ public class TestMenu {
 			nalm = (byte) readInt(1, 200);
 		} catch (NumberFormatException e) {
 			alertUser("bad alarm number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -235,9 +227,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute71() {
+	protected Boolean execute71() {
 
 		byte nmsg;
 		try {
@@ -245,7 +239,7 @@ public class TestMenu {
 			nmsg = (byte) readInt(1, 250);
 		} catch (NumberFormatException e) {
 			alertUser("bad message number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -257,9 +251,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute72() {
+	protected Boolean execute72() {
 
 		byte nmod;
 		try {
@@ -267,7 +263,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 200);
 		} catch (NumberFormatException e) {
 			alertUser("bad alarm number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -276,7 +272,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -288,9 +284,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute73() {
+	protected Boolean execute73() {
 
 		byte nmsg;
 		try {
@@ -298,7 +296,7 @@ public class TestMenu {
 			nmsg = (byte) readInt(1, 250);
 		} catch (NumberFormatException e) {
 			alertUser("bad message number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -307,7 +305,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -319,9 +317,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute74() {
+	protected Boolean execute74() {
 
 		byte nmod;
 		try {
@@ -329,7 +329,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -341,9 +341,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute75() {
+	protected Boolean execute75() {
 
 		byte nmod;
 		try {
@@ -351,7 +353,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -363,9 +365,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute76() {
+	protected Boolean execute76() {
 
 		byte nmod;
 		try {
@@ -373,7 +377,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -382,7 +386,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -394,9 +398,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute77() {
+	protected Boolean execute77() {
 
 		byte nmod;
 		try {
@@ -404,7 +410,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -413,7 +419,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -425,9 +431,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute78() {
+	protected Boolean execute78() {
 
 		byte nmod;
 		try {
@@ -435,7 +443,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		int value;
@@ -444,7 +452,7 @@ public class TestMenu {
 			value = readInt(0, 0xFFFF);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -456,9 +464,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute79() {
+	protected Boolean execute79() {
 
 		byte nmod;
 		try {
@@ -466,7 +476,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		int value;
@@ -475,7 +485,7 @@ public class TestMenu {
 			value = readInt(0, 0xFFFF);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -487,9 +497,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute7A() {
+	protected Boolean execute7A() {
 
 		byte nmod;
 		try {
@@ -497,7 +509,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -506,7 +518,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		int[] values = new int[len];
@@ -531,9 +543,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute7B() {
+	protected Boolean execute7B() {
 
 		byte nmod;
 		try {
@@ -541,7 +555,7 @@ public class TestMenu {
 			nmod = (byte) readInt(1, 255);
 		} catch (NumberFormatException e) {
 			alertUser("bad module number");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -550,7 +564,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		int[] values = new int[len];
@@ -575,9 +589,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute7C() {
+	protected Boolean execute7C() {
 
 		int nvvar;
 		try {
@@ -585,7 +601,7 @@ public class TestMenu {
 			nvvar = readInt(1, 2500);
 		} catch (NumberFormatException e) {
 			alertUser("bad address");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -597,9 +613,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute7D() {
+	protected Boolean execute7D() {
 
 		int nvvar;
 		try {
@@ -607,7 +625,7 @@ public class TestMenu {
 			nvvar = readInt(1, 2500);
 		} catch (NumberFormatException e) {
 			alertUser("bad address");
-			return;
+			return Boolean.FALSE;
 		}
 
 		int value;
@@ -616,7 +634,7 @@ public class TestMenu {
 			value = readInt(0, 0xFFFF);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -628,9 +646,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute7E() {
+	protected Boolean execute7E() {
 
 		int nvvar;
 		try {
@@ -638,7 +658,7 @@ public class TestMenu {
 			nvvar = readInt(1, 2500);
 		} catch (NumberFormatException e) {
 			alertUser("bad address");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -647,7 +667,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		SappCommand sappCommand;
@@ -659,9 +679,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute7F() {
+	protected Boolean execute7F() {
 
 		int nvvar;
 		try {
@@ -669,7 +691,7 @@ public class TestMenu {
 			nvvar = readInt(1, 2500);
 		} catch (NumberFormatException e) {
 			alertUser("bad address");
-			return;
+			return Boolean.FALSE;
 		}
 
 		byte len;
@@ -678,7 +700,7 @@ public class TestMenu {
 			len = (byte) readInt(1, 32);
 		} catch (NumberFormatException e) {
 			alertUser("bad value");
-			return;
+			return Boolean.FALSE;
 		}
 
 		int[] values = new int[len];
@@ -703,9 +725,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute80() {
+	protected Boolean execute80() {
 
 		SappCommand sappCommand;
 
@@ -716,9 +740,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
-	private void execute81() {
+	protected Boolean execute81() {
 
 		SappCommand sappCommand;
 
@@ -729,9 +755,11 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return  Boolean.TRUE;
 	}
 
-	private void execute82() {
+	protected Boolean execute82() {
 
 		SappCommand sappCommand;
 
@@ -742,6 +770,8 @@ public class TestMenu {
 		} catch (SappException e) {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
+
+		return Boolean.TRUE;
 	}
 
 	private void alertUser(String message) {
