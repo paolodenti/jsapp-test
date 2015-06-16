@@ -42,6 +42,8 @@ import com.github.paolodenti.jsapp.core.command.Sapp7FCommand;
 import com.github.paolodenti.jsapp.core.command.Sapp80Command;
 import com.github.paolodenti.jsapp.core.command.Sapp81Command;
 import com.github.paolodenti.jsapp.core.command.Sapp82Command;
+import com.github.paolodenti.jsapp.core.command.Sapp90Command;
+import com.github.paolodenti.jsapp.core.command.Sapp91Command;
 import com.github.paolodenti.jsapp.core.command.base.SappCommand;
 import com.github.paolodenti.jsapp.core.command.base.SappConnection;
 import com.github.paolodenti.jsapp.core.command.base.SappException;
@@ -78,40 +80,41 @@ public class TestMenu {
 
 	private void presentMenu() {
 
-		if (hostName == null && portNumber == 0) {
-			execute1();
-		}
-
 		boolean exit = false;
 		while (!exit) {
 			System.out.println("=======================================================");
 			System.out.println("                    JSapp test menu");
 			System.out.println("=======================================================");
 
-			System.out.println(String.format("Device address: %s:%d", hostName, portNumber));
+			System.out.println((hostName != null && portNumber != 0) ? String.format("Device address: %s:%d", hostName, portNumber) : "Device address: not yet defined");
 			System.out.println();
 
 			System.out.println(" 1) Change device address & port");
-			System.out.println();
-			System.out.println("70) execute 0x70 command (Get User Alarm Status)");
-			System.out.println("71) execute 0x71 command (Get Message Status)");
-			System.out.println("72) execute 0x72 command (Get User Alarm Status 32)");
-			System.out.println("73) execute 0x73 command (Get User Message Status 32)");
-			System.out.println("74) execute 0x74 command (Get Input Status WORD)");
-			System.out.println("75) execute 0x75 command (Get Output Status WORD)");
-			System.out.println("76) execute 0x76 command (Get Input Status 32 WORD)");
-			System.out.println("77) execute 0x77 command (Get Output Status 32 WORD)");
-			System.out.println("78) execute 0x78 command (Set Input Status WORD)");
-			System.out.println("79) execute 0x79 command (Set Output Status WORD)");
-			System.out.println("7A) execute 0x7A command (Set Input Status 32 WORD)");
-			System.out.println("7B) execute 0x7B command (Set Output Status 32 WORD)");
-			System.out.println("7C) execute 0x7C command (Get Virtual Status WORD)");
-			System.out.println("7D) execute 0x7D command (Set Virtual Status WORD)");
-			System.out.println("7E) execute 0x7E command (Get Virtual Status 32 WORD)");
-			System.out.println("7F) execute 0x7F command (Set Virtual Status 32 WORD)");
-			System.out.println("80) execute 0x80 command (Get Last Output WORD)");
-			System.out.println("81) execute 0x81 command (Get Last Input WORD)");
-			System.out.println("82) execute 0x82 command (Get Last Virtual WORD)");
+			if (hostName != null && portNumber != 0) {
+				System.out.println();
+				System.out.println("70) execute 0x70 command (Get User Alarm Status)");
+				System.out.println("71) execute 0x71 command (Get Message Status)");
+				System.out.println("72) execute 0x72 command (Get User Alarm Status 32)");
+				System.out.println("73) execute 0x73 command (Get User Message Status 32)");
+				System.out.println("74) execute 0x74 command (Get Input Status WORD)");
+				System.out.println("75) execute 0x75 command (Get Output Status WORD)");
+				System.out.println("76) execute 0x76 command (Get Input Status 32 WORD)");
+				System.out.println("77) execute 0x77 command (Get Output Status 32 WORD)");
+				System.out.println("78) execute 0x78 command (Set Input Status WORD)");
+				System.out.println("79) execute 0x79 command (Set Output Status WORD)");
+				System.out.println("7A) execute 0x7A command (Set Input Status 32 WORD)");
+				System.out.println("7B) execute 0x7B command (Set Output Status 32 WORD)");
+				System.out.println("7C) execute 0x7C command (Get Virtual Status WORD)");
+				System.out.println("7D) execute 0x7D command (Set Virtual Status WORD)");
+				System.out.println("7E) execute 0x7E command (Get Virtual Status 32 WORD)");
+				System.out.println("7F) execute 0x7F command (Set Virtual Status 32 WORD)");
+				System.out.println("80) execute 0x80 command (Get Last Output WORD)");
+				System.out.println("81) execute 0x81 command (Get Last Input WORD)");
+				System.out.println("82) execute 0x82 command (Get Last Virtual WORD)");
+				System.out.println("90) execute 0x90 command (Set Bit in Virtual Status WORD)");
+				System.out.println("91) execute 0x91 command (Clear Bit in Virtual Status WORD)");
+			}
+
 			System.out.println();
 			System.out.println("99) Exit");
 			System.out.println("=======================================================");
@@ -142,7 +145,9 @@ public class TestMenu {
 				case 0x7F:
 				case 0x80:
 				case 0x81:
-				case 0x82: {
+				case 0x82:
+				case 0x90:
+				case 0x91: {
 					try {
 						Method m = this.getClass().getDeclaredMethod("execute" + choice.toUpperCase());
 						m.setAccessible(true);
@@ -758,7 +763,7 @@ public class TestMenu {
 			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
 		}
 
-		return  Boolean.TRUE;
+		return Boolean.TRUE;
 	}
 
 	protected Boolean execute82() {
@@ -767,6 +772,72 @@ public class TestMenu {
 
 		try {
 			sappCommand = new Sapp82Command();
+			sappCommand.run(hostName, portNumber);
+			System.out.println(sappCommand.isResponseOk() ? "raw response: " + sappCommand.getResponse().toString() + " - result: " + SappUtils.prettyPrint(sappCommand) : "command execution failed");
+		} catch (SappException e) {
+			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
+		}
+
+		return Boolean.TRUE;
+	}
+
+	protected Boolean execute90() {
+
+		int nvvar;
+		try {
+			System.out.print(String.format("Enter address (%d-%d): ", 1, 2500));
+			nvvar = readInt(1, 2500);
+		} catch (NumberFormatException e) {
+			alertUser("bad address");
+			return Boolean.FALSE;
+		}
+
+		int value;
+		try {
+			System.out.print(String.format("Enter value (%d-%d): ", 0, 0xFFFF));
+			value = readInt(0, 0xFFFF);
+		} catch (NumberFormatException e) {
+			alertUser("bad value");
+			return Boolean.FALSE;
+		}
+
+		SappCommand sappCommand;
+
+		try {
+			sappCommand = new Sapp90Command(nvvar, value);
+			sappCommand.run(hostName, portNumber);
+			System.out.println(sappCommand.isResponseOk() ? "raw response: " + sappCommand.getResponse().toString() + " - result: " + SappUtils.prettyPrint(sappCommand) : "command execution failed");
+		} catch (SappException e) {
+			System.err.println(String.format("Command execution failed: %s", e.getMessage()));
+		}
+
+		return Boolean.TRUE;
+	}
+
+	protected Boolean execute91() {
+
+		int nvvar;
+		try {
+			System.out.print(String.format("Enter address (%d-%d): ", 1, 2500));
+			nvvar = readInt(1, 2500);
+		} catch (NumberFormatException e) {
+			alertUser("bad address");
+			return Boolean.FALSE;
+		}
+
+		int value;
+		try {
+			System.out.print(String.format("Enter value (%d-%d): ", 0, 0xFFFF));
+			value = readInt(0, 0xFFFF);
+		} catch (NumberFormatException e) {
+			alertUser("bad value");
+			return Boolean.FALSE;
+		}
+
+		SappCommand sappCommand;
+
+		try {
+			sappCommand = new Sapp91Command(nvvar, value);
 			sappCommand.run(hostName, portNumber);
 			System.out.println(sappCommand.isResponseOk() ? "raw response: " + sappCommand.getResponse().toString() + " - result: " + SappUtils.prettyPrint(sappCommand) : "command execution failed");
 		} catch (SappException e) {
