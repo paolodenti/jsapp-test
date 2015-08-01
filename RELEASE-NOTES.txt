@@ -19,6 +19,7 @@ NEW FEATURES
 FIXED BUGS
 ============
 
+1.0.3: uses jsapp-core 1.0.3
 
 CHANGES
 =========
